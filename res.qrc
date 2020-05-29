@@ -1,0 +1,19 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/back.png</file>
+        <file>res/bt.png</file>
+        <file>res/close.png</file>
+        <file>res/levelscene.png</file>
+        <file>res/music.png</file>
+        <file>res/nomusic.png</file>
+        <file>res/pic.jpg</file>
+        <file>res/set.png</file>
+        <file>res/silence.png</file>
+        <file>res/sound.png</file>
+        <file>res/start.png</file>
+        <file>res/map1.jpg</file>
+        <file>res/map2.jpg</file>
+        <file>res/map3.jpg</file>
+        <file>res/map4.jpg</file>
+    </qresource>
+</RCC>
