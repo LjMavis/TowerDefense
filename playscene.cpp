@@ -4,7 +4,10 @@
 #include <QPainter>
 #include <QTimer>
 #include <QLabel>
+#include <QList>
 #include "mybutton.h"
+#include "towerposition.h"
+
 PlayScene::PlayScene(int level)
 {
     QString str = QString("进入第%1关").arg(level);
@@ -52,9 +55,87 @@ PlayScene::PlayScene(int level)
     levelLb->setGeometry(20,20,100,50);
 }
 
+void PlayScene::loadTowerPosition(QPainter& painter){
+    //第一关的塔坑
+    QPoint map1[]=
+    {
+        QPoint(80,200),
+        QPoint(220,173),
+        QPoint(310,173),
+        QPoint(430,305),
+        QPoint(530,305),
+        QPoint(660,280)
+    };
+    QPoint map2[]=
+    {
+        QPoint(130,320),
+        QPoint(300,320),
+        QPoint(170,210),
+        QPoint(355,210),
+        QPoint(295,95),
+        QPoint(440,130),
+        QPoint(595,110)
+    };
+    int len;
+    if(levelIndex==1){
+        len	= sizeof(map1) / sizeof(map1[0]);
+        for (int i = 0; i < len; ++i){
+            TowerPosition *tp=new TowerPosition(map1[i]);
+            QPixmap pix;//创建QPixmap对象
+            pix.load(":/res/pot.jpg");//加载图片
+            painter.drawPixmap(map1[i].x(),map1[i].y(),50,50,pix);//绘制背景
+            towerPositions_list.push_back(tp);
+        }
+    }
+    else if(levelIndex==2){
+        len	= sizeof(map2) / sizeof(map2[0]);
+        for (int i = 0; i < len; ++i){
+            TowerPosition *tp=new TowerPosition(map2[i]);
+            QPixmap pix;//创建QPixmap对象
+            pix.load(":/res/pot.jpg");//加载图片
+            painter.drawPixmap(map2[i].x(),map2[i].y(),50,50,pix);//绘制背景
+            towerPositions_list.push_back(tp);
+        }
+    }
+//    switch (levelIndex)
+//    {
+//    case 1:
+//        len	= sizeof(map1) / sizeof(map1[0]);
+//        for (int i = 0; i < len; ++i){
+//            TowerPosition *tp=new TowerPosition(map1[i]);
+//            QPixmap pix;//创建QPixmap对象
+//            pix.load(":/res/pot.jpg");//加载图片
+//            painter.drawPixmap(map1[i].x(),map1[i].y(),50,50,pix);//绘制背景
+//            towerPositions_list.push_back(tp);
+//        }
+//        break;
+//    case 2:
+//        len	= sizeof(map2) / sizeof(map1[0]);
+//        for (int i = 0; i < len; ++i){
+//            TowerPosition *tp=new TowerPosition(map2[i]);
+//            QPixmap pix;//创建QPixmap对象
+//            pix.load(":/res/pot.jpg");//加载图片
+//            painter.drawPixmap(map2[i].x(),map1[i].y(),50,50,pix);//绘制背景
+//            towerPositions_list.push_back(tp);
+//        }
+//        break;
+//    case 3:
+//        memcpy(Map, Map_3, sizeof(Map));
+//        break;
+//    case 4:
+//        memcpy(Map, Map_3, sizeof(Map));
+//        break;
+//    default:
+//        break;
+//    }
+
+}
+
+
 void PlayScene::paintEvent(QPaintEvent *){
     QPainter painter(this);
     QPixmap pix;
     pix.load(QString(":/res/map%1.jpg").arg(levelIndex));//背景待改
     painter.drawPixmap(0,0,this->width(),this->height(),pix);//绘制背景
+    loadTowerPosition(painter);
 }

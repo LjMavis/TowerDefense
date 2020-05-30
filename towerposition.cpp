@@ -1,6 +1,9 @@
 #include "towerposition.h"
+#include <QPoint>
+#include <QPixmap>
+#include <QPainter>
 
-TowerPosition::TowerPosition(QObject *parent) : QObject(parent)
-{
-
+TowerPosition::TowerPosition(QPoint pos){
+    this->pos=pos;
 }
+

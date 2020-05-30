@@ -28,13 +28,15 @@ SOURCES += \
         mainwindow.cpp \
     mybutton.cpp \
     chooselevel.cpp \
-    playscene.cpp
+    playscene.cpp \
+    towerposition.cpp
 
 HEADERS += \
         mainwindow.h \
     mybutton.h \
     chooselevel.h \
-    playscene.h
+    playscene.h \
+    towerposition.h
 
 FORMS += \
         mainwindow.ui

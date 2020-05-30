@@ -15,5 +15,6 @@
         <file>res/map2.jpg</file>
         <file>res/map3.jpg</file>
         <file>res/map4.jpg</file>
+        <file>res/pot.jpg</file>
     </qresource>
 </RCC>
