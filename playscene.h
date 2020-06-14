@@ -18,13 +18,15 @@ public:
     void paintEvent(QPaintEvent *);
 
     //储存塔坑的位置
-    void loadTowerPosition(QPainter &painter);
+    void loadTowerPosition();
+
+
 
 signals:
     //写一个自定义信号,返回关卡选择界面,不需要实现
     void playSceneBack();
 private:
-    QList<TowerPosition*> towerPositions_list;
+    QList<TowerPosition *> towerPositions_list;
 
 public slots:
 };

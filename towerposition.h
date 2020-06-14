@@ -1,12 +1,12 @@
-#ifndef TOWERPOSITION_H
-#define TOWERPOSITION_H
+#ifndef TOWERPOSITION1_H
+#define TOWERPOSITION1_H
 
-#include <QObject>
+#include <QPushButton>
 #include <QPoint>
 #include <QPixmap>
+#include <QAction>
 
-//塔坑类
-class TowerPosition : public QObject
+class TowerPosition : public QPushButton
 {
     Q_OBJECT
 public:
@@ -14,11 +14,11 @@ public:
 
     QPoint pos;//塔坑位置
 
-
-
+//    int GetX() const;     //获取横坐标
+//    int GetY() const;     //获取横坐标
 signals:
 
 public slots:
 };
 
-#endif // TOWERPOSITION_H
+#endif // TOWERPOSITION1_H

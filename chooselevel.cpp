@@ -62,7 +62,7 @@ ChooseLevel::ChooseLevel(QWidget *parent) : QMainWindow(parent)
                 this->show();//重新显示关卡选择界面
                 delete play;//关闭上一游戏界面
                 play=NULL;
-        });
+            });
         });
 
         //在按钮上显示数字

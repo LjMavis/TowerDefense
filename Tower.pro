@@ -29,6 +29,7 @@ SOURCES += \
     mybutton.cpp \
     chooselevel.cpp \
     playscene.cpp \
+    towerposition22.cpp \
     towerposition.cpp
 
 HEADERS += \
@@ -36,6 +37,7 @@ HEADERS += \
     mybutton.h \
     chooselevel.h \
     playscene.h \
+    towerposition22.h \
     towerposition.h
 
 FORMS += \

@@ -16,5 +16,10 @@
         <file>res/map3.jpg</file>
         <file>res/map4.jpg</file>
         <file>res/pot.jpg</file>
+        <file>res/SelectionBox.png</file>
+        <file>res/dad.png</file>
+        <file>res/mom.png</file>
+        <file>res/pap.png</file>
+        <file>res/sans.png</file>
     </qresource>
 </RCC>

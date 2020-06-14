@@ -32,6 +32,7 @@ PlayScene::PlayScene(int level)
     back->setParent(this);
     back->move(this->width()-back->width(),this->height()-back->height());
 
+
     //实现返回关卡选择界面
     connect(back,&MyButton::clicked,[=](){
         qDebug()<<"点击返回选择关卡界面";
@@ -42,6 +43,9 @@ PlayScene::PlayScene(int level)
             emit this->playSceneBack();//发出信号，让选择关卡界面监听
         });
     });
+
+    //加载塔坑
+    loadTowerPosition();
 
     //显示当前关卡数
     QLabel * levelLb = new QLabel;
@@ -55,7 +59,7 @@ PlayScene::PlayScene(int level)
     levelLb->setGeometry(20,20,100,50);
 }
 
-void PlayScene::loadTowerPosition(QPainter& painter){
+void PlayScene::loadTowerPosition(){
     //第一关的塔坑
     QPoint map1[]=
     {
@@ -66,6 +70,7 @@ void PlayScene::loadTowerPosition(QPainter& painter){
         QPoint(530,305),
         QPoint(660,280)
     };
+    //第二关的塔坑
     QPoint map2[]=
     {
         QPoint(130,320),
@@ -77,59 +82,37 @@ void PlayScene::loadTowerPosition(QPainter& painter){
         QPoint(595,110)
     };
     int len;
-    if(levelIndex==1){
+    if(levelIndex==1)//布置第一关的塔坑
+    {
         len	= sizeof(map1) / sizeof(map1[0]);
         for (int i = 0; i < len; ++i){
             TowerPosition *tp=new TowerPosition(map1[i]);
-            QPixmap pix;//创建QPixmap对象
-            pix.load(":/res/pot.jpg");//加载图片
-            painter.drawPixmap(map1[i].x(),map1[i].y(),50,50,pix);//绘制背景
-            towerPositions_list.push_back(tp);
+            tp->setParent(this);//设置父类
+            tp->move(map1[i]);
+//            QPixmap pix;//创建QPixmap对象
+//            pix.load(":/res/pot.jpg");//加载图片
+//            painter.drawPixmap(map1[i].x(),map1[i].y(),50,50,pix);//绘制塔坑
+//            towerPositions_list.push_back(tp);
         }
+
+
     }
-    else if(levelIndex==2){
+    else if(levelIndex==2)//布置第二关的塔坑
+    {
         len	= sizeof(map2) / sizeof(map2[0]);
         for (int i = 0; i < len; ++i){
             TowerPosition *tp=new TowerPosition(map2[i]);
-            QPixmap pix;//创建QPixmap对象
-            pix.load(":/res/pot.jpg");//加载图片
-            painter.drawPixmap(map2[i].x(),map2[i].y(),50,50,pix);//绘制背景
-            towerPositions_list.push_back(tp);
+            tp->setParent(this);//设置父类
+            tp->move(map2[i]);
+//            QPixmap pix;//创建QPixmap对象
+//            pix.load(":/res/pot.jpg");//加载图片
+//            painter.drawPixmap(map2[i].x(),map2[i].y(),50,50,pix);//绘制塔坑
+//            towerPositions_list.push_back(tp);
         }
     }
-//    switch (levelIndex)
-//    {
-//    case 1:
-//        len	= sizeof(map1) / sizeof(map1[0]);
-//        for (int i = 0; i < len; ++i){
-//            TowerPosition *tp=new TowerPosition(map1[i]);
-//            QPixmap pix;//创建QPixmap对象
-//            pix.load(":/res/pot.jpg");//加载图片
-//            painter.drawPixmap(map1[i].x(),map1[i].y(),50,50,pix);//绘制背景
-//            towerPositions_list.push_back(tp);
-//        }
-//        break;
-//    case 2:
-//        len	= sizeof(map2) / sizeof(map1[0]);
-//        for (int i = 0; i < len; ++i){
-//            TowerPosition *tp=new TowerPosition(map2[i]);
-//            QPixmap pix;//创建QPixmap对象
-//            pix.load(":/res/pot.jpg");//加载图片
-//            painter.drawPixmap(map2[i].x(),map1[i].y(),50,50,pix);//绘制背景
-//            towerPositions_list.push_back(tp);
-//        }
-//        break;
-//    case 3:
-//        memcpy(Map, Map_3, sizeof(Map));
-//        break;
-//    case 4:
-//        memcpy(Map, Map_3, sizeof(Map));
-//        break;
-//    default:
-//        break;
-//    }
 
 }
+
 
 
 void PlayScene::paintEvent(QPaintEvent *){
@@ -137,5 +120,5 @@ void PlayScene::paintEvent(QPaintEvent *){
     QPixmap pix;
     pix.load(QString(":/res/map%1.jpg").arg(levelIndex));//背景待改
     painter.drawPixmap(0,0,this->width(),this->height(),pix);//绘制背景
-    loadTowerPosition(painter);
+//    loadTowerPosition();
 }
