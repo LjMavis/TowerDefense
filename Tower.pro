@@ -29,16 +29,22 @@ SOURCES += \
     mybutton.cpp \
     chooselevel.cpp \
     playscene.cpp \
-    towerposition22.cpp \
-    towerposition.cpp
+    towerparent.cpp \
+    towerposition.cpp \
+    towerpapyrus.cpp \
+    waypoint.cpp \
+    enemy.cpp
 
 HEADERS += \
         mainwindow.h \
     mybutton.h \
     chooselevel.h \
     playscene.h \
-    towerposition22.h \
-    towerposition.h
+    towerparent.h \
+    towerposition.h \
+    towerpapyrus.h \
+    waypoint.h \
+    enemy.h
 
 FORMS += \
         mainwindow.ui

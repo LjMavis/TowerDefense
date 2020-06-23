@@ -21,5 +21,7 @@
         <file>res/mom.png</file>
         <file>res/pap.png</file>
         <file>res/sans.png</file>
+        <file>res/mtt1.png</file>
+        <file>res/mtt2.png</file>
     </qresource>
 </RCC>

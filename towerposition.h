@@ -1,5 +1,5 @@
-#ifndef TOWERPOSITION1_H
-#define TOWERPOSITION1_H
+#ifndef TOWERPOSITION_H
+#define TOWERPOSITION_H
 
 #include <QPushButton>
 #include <QPoint>
@@ -14,11 +14,15 @@ public:
 
     QPoint pos;//塔坑位置
 
-//    int GetX() const;     //获取横坐标
-//    int GetY() const;     //获取横坐标
-signals:
+    bool hasTower();//是否有塔
 
+    void setTower();//设置为有塔
+
+    bool _hasTower=false;
+signals:
+    void chooseSans();
+    void choosePapyrus();
 public slots:
 };
 
-#endif // TOWERPOSITION1_H
+#endif // TOWERPOSITION_H

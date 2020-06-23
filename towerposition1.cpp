@@ -1,11 +1,11 @@
-#include "towerposition.h"
+#include "towerposition1.h"
 #include <QPushButton>
 #include <QPoint>
 #include <QPixmap>
 #include <QPainter>
 #include <QAction>
 #include <QDebug>
-TowerPosition::TowerPosition(QPoint pos):pos(pos){
+TowerPosition::TowerPosition(QPoint pos):pos(pos)/*,_hasTower(false)*/{
     QPixmap pix;
     bool ret=pix.load(":/res/pot.jpg");
     if(!ret){
@@ -34,14 +34,16 @@ TowerPosition::TowerPosition(QPoint pos):pos(pos){
     connect(action1,&QAction::triggered,this,[=](){
         emit chooseSans();//点击后触发信号
     });
-    connect(action2,&QAction::triggered,this,[=](){
-        emit choosePapyrus();//点击后触发信号
-    });
 }
+//bool TowerPosition::hasTower() const{
+//    return _hasTower;
+//}
+//int TowerPosition::GetX() const     //获取横坐标
+//{
+//    return _x;
+//}
 
-bool TowerPosition::hasTower(){
-    return _hasTower;
-}
-void TowerPosition::setTower(){
-    _hasTower=true;
-}
+//int TowerPosition::GetY() const     //获取横坐标
+//{
+//    return _y;
+//}
