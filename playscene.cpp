@@ -5,11 +5,15 @@
 #include <QTimer>
 #include <QLabel>
 #include <QList>
+#include "qmath.h"
 #include "mybutton.h"
 #include "towerposition.h"
 #include "towerparent.h"
-#include "towerpapyrus.h"
-
+#include "towerfreeze.h"
+#include "towerall.h"
+#include "bullet.h"
+#include "ice.h"
+#include "all.h"
 PlayScene::PlayScene(int level)
 {
     //设置计时器
@@ -100,7 +104,8 @@ PlayScene::PlayScene(int level)
 
 }
 
-void PlayScene::loadTowerPosition(){
+void PlayScene::loadTowerPosition()//布置塔坑
+{
     //第一关的塔坑
     QPoint map1[]=
     {
@@ -249,7 +254,7 @@ void PlayScene::PaintTower()//画出防御塔
                 if(gold>=200){
                     gold-=200;
                     (*p)->setTower();//设置为有塔
-                    TowerParent *tower=new TowerParent((*p)->pos,":/res/sans.png");//创建一个塔
+                    TowerParent *tower=new TowerParent((*p)->pos,":/res/sans.png",this);//创建一个塔
                     tower_list.push_back(tower);
                     qDebug()<<"放置Sans";
                     (*p)->hide();
@@ -258,12 +263,24 @@ void PlayScene::PaintTower()//画出防御塔
             });
             connect(*p,&TowerPosition::choosePapyrus,this,[=](){
                 qDebug()<<"选择了Papyrus";
-                if(gold>=200){
-                    gold-=200;
+                if(gold>=250){
+                    gold-=250;
                     (*p)->setTower();//设置为有塔
-                    TowerPapyrus *tower=new TowerPapyrus((*p)->pos,":/res/pap.png");//创建一个塔
+                    TowerFreeze *tower=new TowerFreeze((*p)->pos,":/res/pap.png",this);//创建一个塔
                     tower_list.push_back(tower);
                     qDebug()<<"放置Papyrus";
+                    (*p)->hide();
+                    update();
+                }
+            });
+            connect(*p,&TowerPosition::chooseAsgore,this,[=](){
+                qDebug()<<"选择了Asgore";
+                if(gold>=300){
+                    gold-=300;
+                    (*p)->setTower();//设置为有塔
+                    TowerAll *tower=new TowerAll((*p)->pos,":/res/dad.png",this);//创建一个塔
+                    tower_list.push_back(tower);
+                    qDebug()<<"放置Asgore";
                     (*p)->hide();
                     update();
                 }
@@ -275,7 +292,7 @@ void PlayScene::PaintTower()//画出防御塔
 }
 bool PlayScene::loadWave()
 {
-    if (wave >= 1+2*levelIndex)//每关攻击波数为1+关卡数*2
+    if (wave >= 2*levelIndex)//每关攻击波数为关卡数*2
     {
         qDebug()<<"没有敌人了";
         return false;
@@ -287,7 +304,7 @@ bool PlayScene::loadWave()
     {
         if(wave<2)//前两波，只有mtt1
         {
-            Enemy *enemy = new Enemy(startWayPoint,this,40,1.0,100,":/res/mtt1.png");
+            Enemy *enemy = new Enemy(startWayPoint,this,40,1.5,100,":/res/mtt1.png");
             enemy_list.push_back(enemy);
             QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
                 //singleShot相当于定时器，好处在于不需使用timer，在设置时间到后自动触发SLOT中的函数
@@ -297,7 +314,7 @@ bool PlayScene::loadWave()
             //一样一个的插入
             if(i%2==0)//插入mtt1
             {
-                Enemy *enemy = new Enemy(startWayPoint,this,40,1.0,100,":/res/mtt1.png");
+                Enemy *enemy = new Enemy(startWayPoint,this,40,1.5,100,":/res/mtt1.png");
                 enemy_list.push_back(enemy);
                 QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
             }
@@ -312,20 +329,89 @@ bool PlayScene::loadWave()
     }
     return true;
 }
+//加入子弹
+void PlayScene::addBullet(Bullet *bullet){
+    bullet_list.push_back(bullet);
+}
+//加入减速子弹
+void PlayScene::addIce(Ice *ice){
+    ice_list.push_back(ice);
+}
+//加入群攻光波
+void PlayScene::addAll(All *all)
+{
+    all_list.push_back(all);
+}
+
 void PlayScene::gameStart()//开始游戏
 {
     loadWave();
 }
 
+//判断是否在射程内，同碰撞函数
+bool ifInRange(QPoint point1, int radius1, QPoint point2, int radius2)
+{
+    const int xdif = point1.x() - point2.x();
+    const int ydif = point1.y() - point2.y();
+    const int distance = qSqrt(xdif * xdif + ydif * ydif);
+    if (distance <= radius1 + radius2){
+        return true;
+    }
+    return false;
+}
 void PlayScene::updateMap()//刷新界面
 {
+    //1.移动怪物
     foreach (Enemy *enemy, enemy_list){
         enemy->move();
 //        qDebug()<<"移动怪物";
     }
-//	foreach (Tower *tower, m_towersList)
-//		tower->checkEnemyInRange();
+
+    //2.判断tower与enemy的距离
+//    foreach (TowerParent *tower, tower_list)
+//        tower->checkEnemyInRange();
+    foreach (TowerParent *tower, tower_list)
+    {
+        //如果tower没有攻击
+        if(tower->getTargetEnemy()==NULL)
+        {
+//            qDebug()<<"无攻击对象";
+            foreach  (Enemy *enemy, enemy_list)
+            {
+                if(ifInRange((tower->getPos()+QPoint(25,25)),tower->getAttackRange(), enemy->getPos(), 1))
+                {
+                    qDebug()<<"对象在范围内";
+                    tower->attackEnemy(enemy);//出错位置，待改！！！！//已改正，出错在TowerParent没有初始化_game
+                    break;
+                }
+            }
+        }
+        //如果tower正在攻击
+        else
+        {
+//            qDebug()<<"有攻击对象";
+            if( !ifInRange((tower->getPos()+QPoint(25,25)), tower->getAttackRange(), tower->getTargetEnemy()->getPos(), 1))
+            {
+                tower->loseEnemy();
+                qDebug()<<"取消瞄准";
+            }
+        }
+    }
     update();
+}
+//被光波击中
+void PlayScene::allEffect(All *all)
+{
+    foreach(Enemy *enemy, enemy_list)
+    {
+        if(ifInRange(enemy->getPos(),1,all->getPos(),all->getTargetRadius()))//若在攻击范围内
+        {
+            enemy->getDamage(all->getDamage());
+            enemy->setAlled();
+        }
+
+    }
+    removedAll(all);
 }
 void PlayScene::drawGold(QPainter *painter)//显示金币数
 {
@@ -345,14 +431,48 @@ void PlayScene::drawLife(QPainter *painter)//显示玩家生命值
     painter->setFont(font);
     painter->drawText(QRect(170,490,150,100), QString("Life: %1").arg(life));
 }
-
+void PlayScene::drawWave(QPainter *painter)//显示攻击波数
+{
+    painter->setPen(QPen(Qt::black));
+    QFont font=painter->font();
+    font.setFamily("华文新魏");
+    font.setPixelSize(24);
+    painter->setFont(font);
+    painter->drawText(QRect(320,490,100,100), QString("Wave: %1 ").arg(wave+1));
+    painter->drawText(QRect(420,490,150,100), QString("/ %1").arg(2*levelIndex));
+}
 void PlayScene::getLifeDamage(int damage)//玩家生命值-1
 {
     life -= damage;
-//    if (life <= 0)//判断游戏结束
-//    {doGameOver();}
+    if (life <= 0)//判断游戏结束
+    {
+        qDebug()<<"游戏结束";
+        //doGameOver();
+        if(!_gameLose){
+            _gameLose=true;//游戏结束
+        }
+    }
 }
-
+void PlayScene::awardGold(int gold)//奖励金币
+{
+    this->gold += gold;
+    update();
+}
+void PlayScene::removedBullet(Bullet *bullet)//移除子弹
+{
+    bullet_list.removeOne(bullet);
+    delete bullet;
+}
+void PlayScene::removedIce(Ice *ice)//移除减速子弹
+{
+    ice_list.removeOne(ice);
+    delete ice;
+}
+void PlayScene::removedAll(All *all)//移除光波
+{
+    all_list.removeOne(all);
+    delete all;
+}
 void PlayScene::removedEnemy(Enemy *enemy)//移除怪物
 {
     enemy_list.removeOne(enemy);
@@ -367,13 +487,47 @@ void PlayScene::removedEnemy(Enemy *enemy)//移除怪物
         {
             // 当没有下一波时，游戏胜利
             // 设置游戏胜利标志为true
-//            m_gameWin = true;
+            _gameWin = true;//游戏胜利
             qDebug()<<"游戏胜利";
         }
     }
 }
-
+QList<Enemy *> PlayScene::enemyList() const
+{
+    return enemy_list;
+}
 void PlayScene::paintEvent(QPaintEvent *){
+    //判断游戏是否结束
+    if (_gameLose)
+    {
+        QPixmap losegame;
+        losegame.load(":/res/lose.jpg");
+        QPainter painter;
+        painter.begin(this);
+        painter.drawPixmap(0, 0,this->width(),this->height(), losegame);
+        painter.end();
+        foreach(TowerPosition * p,towerPositions_list){
+            (*p).hide();
+        }
+//        m_player.stop();
+        return;
+    }
+    //判断游戏是否胜利
+    if (_gameWin)
+    {
+        QPixmap wingame;
+        wingame.load(":/res/win.jpg");
+        QPainter painter;
+        painter.begin(this);
+        painter.drawPixmap(0, 0,this->width(),this->height(), wingame);
+        painter.end();
+        foreach(TowerPosition * p,towerPositions_list){
+            (*p).hide();
+        }
+//        m_player.stop();
+        return;
+    }
+
     QPainter painter(this);
     QPixmap pix;
     pix.load(QString(":/res/map%1.jpg").arg(levelIndex));//背景待改
@@ -381,6 +535,14 @@ void PlayScene::paintEvent(QPaintEvent *){
     foreach(TowerParent * tower,tower_list) {tower->draw(&painter);}//绘制塔
     foreach (const WayPoint *wayPoint, wayPoints_list){wayPoint->draw(&painter);}//绘制路径
     foreach (Enemy *enemy, enemy_list) {enemy->draw(&painter); }//绘制怪物
+    foreach (Bullet *bullet, bullet_list) { bullet->draw(&painter);}//绘制子弹
+    foreach (Ice *ice, ice_list) { ice->draw(&painter);}//绘制减速子弹
+    foreach (All *all, all_list) { all->draw(&painter);}//绘制减速子弹
+//    foreach (TowerPosition * p,towerPositions_list) {
+//        if((*p)._hasTower){(*p).hide();}
+//        (*p).show();
+//    }//控制塔坑的出现与消失
     drawGold(&painter);//显示金币数
     drawLife(&painter);//显示玩家生命值
+    drawWave(&painter);//显示攻击波数
 }

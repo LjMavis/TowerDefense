@@ -18,10 +18,11 @@ public:
 
     void setTower();//设置为有塔
 
-    bool _hasTower=false;
+    bool _hasTower = false;
 signals:
     void chooseSans();
     void choosePapyrus();
+    void chooseAsgore();
 public slots:
 };
 

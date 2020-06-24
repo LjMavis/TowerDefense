@@ -23,5 +23,10 @@
         <file>res/sans.png</file>
         <file>res/mtt1.png</file>
         <file>res/mtt2.png</file>
+        <file>res/bullet1.png</file>
+        <file>res/bullet2.png</file>
+        <file>res/bullet3.png</file>
+        <file>res/lose.jpg</file>
+        <file>res/win.jpg</file>
     </qresource>
 </RCC>

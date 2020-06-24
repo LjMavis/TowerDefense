@@ -24,18 +24,21 @@ TowerPosition::TowerPosition(QPoint pos):pos(pos){
     QAction * action2= new QAction(this);
     action2->setText("Papyrus");
     this->addAction(action2);
+//    QAction * action3= new QAction(this);
+//    action3->setText("Toriel");
+//    this->addAction(action3);
     QAction * action3= new QAction(this);
-    action3->setText("Toriel");
+    action3->setText("Asgore");
     this->addAction(action3);
-    QAction * action4= new QAction(this);
-    action4->setText("Asgore");
-    this->addAction(action4);
     //触发信号
     connect(action1,&QAction::triggered,this,[=](){
         emit chooseSans();//点击后触发信号
     });
     connect(action2,&QAction::triggered,this,[=](){
         emit choosePapyrus();//点击后触发信号
+    });
+    connect(action3,&QAction::triggered,this,[=](){
+        emit chooseAsgore();//点击后触发信号
     });
 }
 
