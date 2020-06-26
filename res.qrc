@@ -16,7 +16,6 @@
         <file>res/map3.jpg</file>
         <file>res/map4.jpg</file>
         <file>res/pot.jpg</file>
-        <file>res/SelectionBox.png</file>
         <file>res/dad.png</file>
         <file>res/mom.png</file>
         <file>res/pap.png</file>
@@ -37,5 +36,8 @@
         <file>res/music/lose.mp3</file>
         <file>res/music/win.mp3</file>
         <file>res/music/all.mp3</file>
+        <file>res/guard.png</file>
+        <file>res/intro.png</file>
+        <file>res/introBtn.png</file>
     </qresource>
 </RCC>

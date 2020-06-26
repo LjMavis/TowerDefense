@@ -23,13 +23,13 @@ TowerPosition::TowerPosition(QPoint pos):pos(pos){
     action1->setText("Sans 200");
     this->addAction(action1);
     QAction * action2= new QAction(this);
-    action2->setText("Papyrus 250");
+    action2->setText("Papyrus 300");
     this->addAction(action2);
 //    QAction * action3= new QAction(this);
 //    action3->setText("Toriel");
 //    this->addAction(action3);
     QAction * action3= new QAction(this);
-    action3->setText("Asgore 300");
+    action3->setText("Asgore 400");
     this->addAction(action3);
     //触发信号
     connect(action1,&QAction::triggered,this,[=](){

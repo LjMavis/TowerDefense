@@ -16,7 +16,7 @@ void Ice::hitTarget()//击中目标
     // 先判断下敌人是否还有效
     if (getGame()->enemyList().indexOf(getTargetEnemy()) != -1){
         getTargetEnemy()->getDamage(getDamage());//目标受到伤害
-        if((!getTargetEnemy()->ifFreezed())&&getTargetEnemy()->ifAlive())//目标未被减速并且还活着
+        if((!getTargetEnemy()->ifFreezed())&&getTargetEnemy()->ifAlive()&&(!getTargetEnemy()->getStrong()))//目标未被减速并且还活着,并且目标不能忽视减速
         {
             getTargetEnemy()->getFreezed();
         }

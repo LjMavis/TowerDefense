@@ -358,8 +358,8 @@ void PlayScene::PaintTower()//画出防御塔
             });
             connect(*p,&TowerPosition::choosePapyrus,this,[=](){
                 qDebug()<<"选择了Papyrus";
-                if(gold>=250){
-                    gold-=250;
+                if(gold>=300){
+                    gold-=300;
                     TowerFreeze *tower=new TowerFreeze((*p)->pos,":/res/pap.png",this);//创建一个塔
                     (*p)->setTower(tower);//设置为有塔
                     tower_list.push_back(tower);
@@ -371,8 +371,8 @@ void PlayScene::PaintTower()//画出防御塔
             });
             connect(*p,&TowerPosition::chooseAsgore,this,[=](){
                 qDebug()<<"选择了Asgore";
-                if(gold>=300){
-                    gold-=300;
+                if(gold>=400){
+                    gold-=400;
                     TowerAll *tower=new TowerAll((*p)->pos,":/res/dad.png",this);//创建一个塔
                     (*p)->setTower(tower);//设置为有塔
                     tower_list.push_back(tower);
@@ -401,7 +401,7 @@ bool PlayScene::loadWave()
     {
         if(wave<2)//前两波，只有mtt1
         {
-            Enemy *enemy = new Enemy(startWayPoint,this,40,1.5,100,":/res/mtt1.png");
+            Enemy *enemy = new Enemy(startWayPoint,this,40,1.5,100,":/res/mtt1.png",false);
             enemy_list.push_back(enemy);
             QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
                 //singleShot相当于定时器，好处在于不需使用timer，在设置时间到后自动触发SLOT中的函数
@@ -411,22 +411,32 @@ bool PlayScene::loadWave()
             //一样一个的插入
             if(i%2==0)//插入mtt1
             {
-                Enemy *enemy = new Enemy(startWayPoint,this,40,1.5,100,":/res/mtt1.png");
+                Enemy *enemy = new Enemy(startWayPoint,this,40,1.5,100,":/res/mtt1.png",false);
                 enemy_list.push_back(enemy);
                 QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
             }
             else//插入mtt2
             {
-                Enemy *enemy = new Enemy(startWayPoint, this,80,2.2,100,":/res/mtt2.png");
+                Enemy *enemy = new Enemy(startWayPoint, this,80,2.4,100,":/res/mtt2.png",false);
                 enemy_list.push_back(enemy);
                 QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
             }
 
         }
         else{//只有mtt2
-            Enemy *enemy = new Enemy(startWayPoint, this,80,2.2,100,":/res/mtt2.png");
-            enemy_list.push_back(enemy);
-            QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
+            //一样一个的插入
+            if(i%2==0)//插入guard
+            {
+                Enemy *enemy = new Enemy(startWayPoint,this,80,1.5,100,":/res/guard.png",true);
+                enemy_list.push_back(enemy);
+                QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
+            }
+            else//插入mtt2
+            {
+                Enemy *enemy = new Enemy(startWayPoint, this,80,2.4,100,":/res/mtt2.png",false);
+                enemy_list.push_back(enemy);
+                QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
+            }
         }
     }
     return true;

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include "chooselevel.h"
 #include <QMediaPlayer>
+#include "intro.h"
 namespace Ui {
 class MainWindow;
 }
@@ -21,6 +22,10 @@ public:
 
     //关卡选择界面
     ChooseLevel * chooseScence = NULL;
+
+    //游戏简介界面
+    Intro * introScence = NULL;
+
 private:
     Ui::MainWindow *ui;
 

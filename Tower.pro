@@ -41,7 +41,8 @@ SOURCES += \
     ice.cpp \
     towerall.cpp \
     all.cpp \
-    enemy.cpp
+    enemy.cpp \
+    intro.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -56,7 +57,8 @@ HEADERS += \
     ice.h \
     towerall.h \
     all.h \
-    enemy.h
+    enemy.h \
+    intro.h
 
 FORMS += \
         mainwindow.ui

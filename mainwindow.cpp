@@ -31,13 +31,24 @@ MainWindow::MainWindow(QWidget *parent) :
     start->setParent(this);
     start->move(this->width()*0.5-start->width()*0.5,300);
 
+    //游戏介绍按钮
+    MyButton * intro = new MyButton(":/res/introBtn.png");
+    intro->setParent(this);
+    intro->move(this->width()*0.5-start->width()*0.5,350);
+
     chooseScence = new ChooseLevel;//创建关卡选择界面
+    introScence = new Intro;//游戏简介界面
 
     //监听关卡选择界面的返回按钮
     connect(chooseScence,&ChooseLevel::chooseSceneBack,this,[=](){
         chooseScence->hide();//隐藏关卡选择界面
         this->show();//重新显示主界面
         bgm1player.play();//重新播放背景音乐
+    });
+    //监听游戏简介界面的返回按钮
+    connect(introScence,&Intro::chooseBack,this,[=](){
+        introScence->hide();//隐藏游戏简介界面
+        this->show();//重新显示主界面
     });
 
     connect(start,&MyButton::clicked,[=](){
@@ -51,6 +62,17 @@ MainWindow::MainWindow(QWidget *parent) :
         });
         bgm1player.stop();//点击游戏开始，就停止播放背景音乐
         chooseScence->bgm2player.play();
+    });
+
+    connect(intro,&MyButton::clicked,[=](){
+        qDebug()<<"点击游戏介绍";
+        intro->zoom1();//做弹起特效
+        intro->zoom2();
+        //延时0.4秒
+        QTimer::singleShot(400,this,[=](){
+            this->hide();//隐藏主界面
+            introScence->show();//进入游戏简介界面
+        });
     });
 
 }

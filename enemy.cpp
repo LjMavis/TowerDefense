@@ -16,7 +16,7 @@ bool collisionWithCircle(QPoint point1, int radius1, QPoint point2, int radius2)
         return true;
     return false;
 }
-Enemy::Enemy(WayPoint *startWayPoint, PlayScene *game, int Hp, double speed, int reward, QString path) : QObject(0)
+Enemy::Enemy(WayPoint *startWayPoint, PlayScene *game, int Hp, double speed, int reward, QString path, bool ifstrong) : QObject(0)
 {
     _active=false;
     _freezed=false;
@@ -30,7 +30,7 @@ Enemy::Enemy(WayPoint *startWayPoint, PlayScene *game, int Hp, double speed, int
     _pic.load(path);
     _reward=reward;
     _alled=false;
-
+    _strong=ifstrong;
 }
 //激活怪物
 void Enemy::doActivate()

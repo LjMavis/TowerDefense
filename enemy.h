@@ -16,7 +16,7 @@ class Enemy : public QObject
     Q_OBJECT
 public:
     explicit Enemy(QObject *parent = nullptr);
-    Enemy(WayPoint *startWayPoint, PlayScene *game,int Hp,double speed,int reward,QString path);
+    Enemy(WayPoint *startWayPoint, PlayScene *game,int Hp,double speed,int reward,QString path,bool ifstrong);
 
 //    void recoverSpeed();//恢复原本的速度
 //    void judgeLife();//判断是否还活着
@@ -32,6 +32,7 @@ public:
     bool ifAll(){return _alled;}//获取是否被群攻扫描
     void getFreezed();//受到ice伤害，被减速
     void setAlled();//设置为被群攻扫描到
+    bool getStrong(){return _strong;}//获取是否无视减速
 //    QTimer *_timer=new QTimer();
 
     PlayScene *	_game;//游戏界面
@@ -53,6 +54,7 @@ private:
     double _currentSpeed;//当下速度
     bool _freezed;//敌人是否被减速
     bool _alled;//敌人是否被群攻
+    bool _strong;//敌人是否可以无视减速
 
 signals:
 
