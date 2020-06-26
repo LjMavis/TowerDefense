@@ -28,5 +28,14 @@
         <file>res/bullet3.png</file>
         <file>res/lose.jpg</file>
         <file>res/win.jpg</file>
+        <file>res/music/bgm1.mp3</file>
+        <file>res/music/bgm2.mp3</file>
+        <file>res/music/bgm3.mp3</file>
+        <file>res/music/setTower.mp3</file>
+        <file>res/music/shoot.mp3</file>
+        <file>res/music/levelup.mp3</file>
+        <file>res/music/lose.mp3</file>
+        <file>res/music/win.mp3</file>
+        <file>res/music/all.mp3</file>
     </qresource>
 </RCC>

@@ -5,6 +5,10 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia #为了使用QMediaPlayer
+#为了解决no such slot
+#OBJECTS_DIR  = tmp
+#MOC_DIR      = tmp
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -31,13 +35,13 @@ SOURCES += \
     playscene.cpp \
     towerposition.cpp \
     waypoint.cpp \
-    enemy.cpp \
     bullet.cpp \
     towerparent.cpp \
     towerfreeze.cpp \
     ice.cpp \
     towerall.cpp \
-    all.cpp
+    all.cpp \
+    enemy.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -46,13 +50,13 @@ HEADERS += \
     playscene.h \
     towerposition.h \
     waypoint.h \
-    enemy.h \
     bullet.h \
     towerparent.h \
     towerfreeze.h \
     ice.h \
     towerall.h \
-    all.h
+    all.h \
+    enemy.h
 
 FORMS += \
         mainwindow.ui

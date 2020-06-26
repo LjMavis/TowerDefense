@@ -11,6 +11,7 @@ class TowerFreeze : public TowerParent
 public:
     TowerFreeze(QPoint pos, QString path, PlayScene *game);
     qreal getSpeed(){return _speed;}
+    void levelUp();
 
 signals:
 

@@ -3,7 +3,7 @@
 
 #include <QMainWindow>
 #include "chooselevel.h"
-
+#include <QMediaPlayer>
 namespace Ui {
 class MainWindow;
 }
@@ -23,6 +23,8 @@ public:
     ChooseLevel * chooseScence = NULL;
 private:
     Ui::MainWindow *ui;
+
+    QMediaPlayer bgm1player;//主菜单背景音乐
 };
 
 #endif // MAINWINDOW_H

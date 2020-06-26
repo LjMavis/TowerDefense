@@ -21,6 +21,10 @@ ChooseLevel::ChooseLevel(QWidget *parent) : QMainWindow(parent)
         this->close();
     });
 
+    //配置背景音乐
+    bgm2player.setMedia(QUrl("qrc:/res/music/bgm2.mp3"));
+    bgm2player.setVolume(15);
+//    bgm2player.play();
 
     //返回按钮
     MyButton * back = new MyButton(":/res/back.png");
@@ -35,15 +39,17 @@ ChooseLevel::ChooseLevel(QWidget *parent) : QMainWindow(parent)
         //延时0.4秒
         QTimer::singleShot(400,this,[=](){
             emit this->chooseSceneBack();//发出信号，让主界面监听
+
         });
+        bgm2player.stop();//返回主界面就停止播放背景音乐
     });
 
     //选择关卡的按钮
     //水平排列4个关卡的选择
-    for(int i=0;i<4;i++){
+    for(int i=0;i<3;i++){
         MyButton * levelBtn = new MyButton(":/res/bt.png");
         levelBtn->setParent(this);
-        levelBtn->move((i+1)*this->width()/5-levelBtn->width(),this->height()*0.25);
+        levelBtn->move((i+1)*this->width()/4-levelBtn->width(),this->height()*0.25);
 
         //监听关卡选择
         connect(levelBtn,&MyButton::clicked,[=](){
@@ -55,13 +61,16 @@ ChooseLevel::ChooseLevel(QWidget *parent) : QMainWindow(parent)
             QTimer::singleShot(400,this,[=](){
                 //进入游戏场景
                 this->hide();//隐藏关卡选择界面
+                bgm2player.stop();//停止播放背景音乐
                 play->show();//显示游戏界面
+                play->bgm3player.play();//播放游戏界面音乐
             });
             //监听游戏界面的返回按钮
             connect(play,&PlayScene::playSceneBack,this,[=](){
                 this->show();//重新显示关卡选择界面
                 delete play;//关闭上一游戏界面
                 play=NULL;
+                bgm2player.play();//继续播放背景音乐
             });
         });
 
@@ -70,7 +79,7 @@ ChooseLevel::ChooseLevel(QWidget *parent) : QMainWindow(parent)
         label->setParent(this);
         label->setFixedSize(levelBtn->width(),levelBtn->height());//设置大小
         label->setText(QString::number(i+1));
-        label->move((i+1)*this->width()/5-levelBtn->width(),this->height()*0.25);
+        label->move((i+1)*this->width()/4-levelBtn->width(),this->height()*0.25);
         label->setAlignment(Qt::AlignHCenter | Qt::AlignVCenter);//设置水平、垂直居中
         QFont ft;//设置字体大小
         ft.setPointSize(16);

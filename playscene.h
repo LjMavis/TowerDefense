@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPainter>
 #include <QList>
+#include <QMediaPlayer>
 #include "towerposition.h"
 #include "towerparent.h"
 #include "waypoint.h"
@@ -24,10 +25,19 @@ public:
     int life;//生命值
     int wave;//怪物波数
 
+    QMediaPlayer bgm3player;//游戏背景音乐
+    QMediaPlayer setTowerPlayer;//放置和拆除塔的音效
+    QMediaPlayer levelUpPlayer;//塔进行升级的音效
+    QMediaPlayer winPlayer;//游戏胜利的音效
+    QMediaPlayer losePlayer;//游戏失败的音效
 
     QList<Enemy *> enemyList() const;//获取enemy_list
+
     //重写绘画事件
     void paintEvent(QPaintEvent *);
+
+    //鼠标点击事件，升级+移除
+    void mousePressEvent(QMouseEvent *);
 
     //画出塔坑
     void loadTowerPosition();
@@ -52,6 +62,8 @@ public:
 
     //群攻光波击中效果
     void allEffect(All *all);
+
+    //
 
     //玩家获得金币
     void awardGold(int gold);

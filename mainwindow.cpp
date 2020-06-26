@@ -3,6 +3,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <QTimer>
+#include <QMediaPlayer>
 #include "mybutton.h"
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -20,6 +21,11 @@ MainWindow::MainWindow(QWidget *parent) :
         this->close();
     });
 
+    //配置背景音乐
+    bgm1player.setMedia(QUrl("qrc:/res/music/bgm1.mp3"));
+    bgm1player.setVolume(15);
+    bgm1player.play();
+
     //游戏开始按钮
     MyButton * start = new MyButton(":/res/start.png");
     start->setParent(this);
@@ -31,6 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(chooseScence,&ChooseLevel::chooseSceneBack,this,[=](){
         chooseScence->hide();//隐藏关卡选择界面
         this->show();//重新显示主界面
+        bgm1player.play();//重新播放背景音乐
     });
 
     connect(start,&MyButton::clicked,[=](){
@@ -42,6 +49,8 @@ MainWindow::MainWindow(QWidget *parent) :
             this->hide();//隐藏主界面
             chooseScence->show();//进入关卡选择界面
         });
+        bgm1player.stop();//点击游戏开始，就停止播放背景音乐
+        chooseScence->bgm2player.play();
     });
 
 }

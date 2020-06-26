@@ -11,7 +11,7 @@ TowerParent::TowerParent(QPoint pos,QString path,PlayScene *game)
 {
     _level=0;
     _pos = pos;
-    _range[0]=80;_range[1]=110;_range[2]=130;
+    _range[0]=80;_range[1]=110;_range[2]=140;
     _damage[0]=10;_damage[1]=15;_damage[2]=20;
     _cd[0]=1500;_cd[1]=1200;_cd[2]=900;
     TowerPath = path;
@@ -19,11 +19,10 @@ TowerParent::TowerParent(QPoint pos,QString path,PlayScene *game)
     _h=45;
     _targetEnemy = NULL;
     _game = game;
-//    m_game2 = NULL;
     _fireRateTimer = new QTimer(this);
     connect(_fireRateTimer, SIGNAL(timeout()), this, SLOT(shootWeapon()) );
-//    m_player.setMedia(QUrl("qrc:/pic/music/towersound.mp3"));
-//    m_player.setVolume(30);
+    shootPlayer.setMedia(QUrl("qrc:/res/music/shoot.mp3"));
+    shootPlayer.setVolume(18);
 }
 
 TowerParent::~TowerParent()
@@ -35,19 +34,18 @@ QPoint TowerParent::getPos(){
     return this->_pos;
 }
 
-void TowerParent::attack()
-{
-//    _fireRateTimer->start(_cd[_level]);
-//    qDebug()<<"启动_fireRateTimer";
-}
+//void TowerParent::attack()
+//{
+////    _fireRateTimer->start(_cd[_level]);
+////    qDebug()<<"启动_fireRateTimer";
+//}
 void TowerParent::attackEnemy(Enemy *enemy)//启动攻击
 {
     _targetEnemy = enemy;
     qDebug()<<"设置了攻击对象";
-
     shootWeapon();//因为_fireRateTimer->start(_cd[_level])会在_cd[_level]时间后才开始攻击，所以手动补上第一次攻击
     _fireRateTimer->start(_cd[_level]);
-    attack();
+//    attack();
     _targetEnemy->getAttacked(this);
 
 }
@@ -96,6 +94,8 @@ void TowerParent::shootWeapon()//每次攻击产生一个子弹，由PlayScene�
     Bullet *bullet = new Bullet(_pos, _targetEnemy->getPos(), _damage[_level], _targetEnemy,_game);
     bullet->move();
     _game->addBullet(bullet);
+    shootPlayer.play();//播放发射子弹的音效
+
 }
 
 void TowerParent::targetKilled()
@@ -136,7 +136,10 @@ void TowerParent::draw(QPainter *painter){
 }
 void TowerParent::levelUp()
 {
+    levelChange();
+}
+void TowerParent::levelChange(){
     _level ++;
-    _w+=10;
-    _h+=10;
+    _w+=8;
+    _h+=8;
 }

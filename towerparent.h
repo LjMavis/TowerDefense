@@ -6,6 +6,7 @@
 #include <QPoint>
 #include <QPainter>
 #include <QDebug>
+#include <QMediaPlayer>
 #include "enemy.h"
 class PlayScene;
 class Enemy;
@@ -29,12 +30,15 @@ public:
     PlayScene * getGame(){return _game;}
     int getAttackRange(){return _range[_level];}
     int getDamage(){return _damage[_level];}
-
-    void attack();
-
+    QMediaPlayer shootPlayer;//射出子弹的音效
+//    void attack();
+    void levelChange();
+    //判断是否可以升级
+    bool canLevelUp(){if(_level<2) return true;
+                      else return false;}
 //    void checkEnemyInRange();
 
-    /*virtual */void levelUp();
+    virtual void levelUp();
 
 private:
     QPoint _pos;//塔的位置，左上角坐标
@@ -47,6 +51,7 @@ private:
     QTimer *_fireRateTimer;//发射子弹的计时器
     Enemy *_targetEnemy;//攻击对象
     PlayScene * _game;
+
 
 signals:
 

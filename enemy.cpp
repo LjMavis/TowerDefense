@@ -5,6 +5,7 @@
 #include <QTimer>
 #include "towerparent.h"
 #include "playscene.h"
+
 //碰撞函数，非成员，用在move()中判断敌人是否到达航点
 bool collisionWithCircle(QPoint point1, int radius1, QPoint point2, int radius2)
 {
@@ -15,8 +16,6 @@ bool collisionWithCircle(QPoint point1, int radius1, QPoint point2, int radius2)
         return true;
     return false;
 }
-
-
 Enemy::Enemy(WayPoint *startWayPoint, PlayScene *game, int Hp, double speed, int reward, QString path) : QObject(0)
 {
     _active=false;
@@ -51,10 +50,44 @@ void Enemy::getDamage(int damage)
     if (_currentHp <= 0)// 阵亡,需要移除
     {
 //		_game->audioPlayer()->playSound(EnemyDestorySound);//死亡音效
+//        _timer->stop();
         _game->awardGold(_reward);
+        foreach (TowerParent *tower, _attackedTowerList)
+            tower->loseEnemy();
         getRemoved();
     }
 }
+//void Enemy::judgeLife()
+//{
+//    // 若阵亡,则需要移除
+//    if (_currentHp <= 0){
+//        //m_game->audioPlayer()->playSound(EnemyDestorySound);  //音效，先不做
+//        _game->awardGold(_reward);//获得金钱
+
+//        foreach (TowerParent *tower, _attackedTowerList)
+//            tower->loseEnemy();
+//        getRemoved();
+//    }
+//}
+//bool Enemy::judgeLife(){
+//    // 若阵亡,则需要移除
+//    if (_currentHp <= 0){
+//        //m_game->audioPlayer()->playSound(EnemyDestorySound);  //音效，先不做
+//        _game->awardGold(_reward);//获得金钱
+
+//        foreach (TowerParent *tower, _attackedTowerList)
+//            tower->loseEnemy();
+//        getRemoved();
+//        return false;
+//    }
+//}
+bool Enemy::ifAlive(){
+    if(_currentHp>0){
+        return true;
+    }
+    return false;
+}
+
 //被ice攻击到
 void Enemy::getFreezed()
 {
@@ -62,10 +95,16 @@ void Enemy::getFreezed()
     _freezed = true;
     _currentSpeed-=0.5;
     qDebug()<<"敌人被减速";
-    QTimer::singleShot( 4000, this, SLOT(recoverSpeed()));
+//    _timer->start(4000);
+//    connect(_timer, SIGNAL(timeout()), this, SLOT(recoverSpeed()));//4000毫秒后，恢复速度
+    QTimer::singleShot(4000, this, SLOT(recoverSpeed()));
+//    QTimer::singleShot(4000, this, [=](){
+//        recoverSpeed();
+//    });
 }
 void Enemy::recoverSpeed()
 {
+//    _timer->stop();
     _currentSpeed = _walkingSpeed;
     _freezed = false;
 }
@@ -84,8 +123,10 @@ void Enemy::getRemoved()
 
     foreach (TowerParent *attacker, _attackedTowerList)
         attacker->targetKilled();
+
     // 通知game,此敌人已经阵亡
     _game->removedEnemy(this);
+
 }
 
 

@@ -32,6 +32,22 @@ PlayScene::PlayScene(int level)
     this->setFixedSize(780,520);
     this->setWindowTitle("paly scene");
 
+    //配置背景音乐
+    bgm3player.setMedia(QUrl("qrc:/res/music/bgm3.mp3"));
+    bgm3player.setVolume(20);
+    //配置放塔和拆除塔的音效
+    setTowerPlayer.setMedia(QUrl("qrc:/res/music/setTower.mp3"));
+    setTowerPlayer.setVolume(20);
+    //升级塔的音效
+    levelUpPlayer.setMedia(QUrl("qrc:/res/music/levelup.mp3"));
+    levelUpPlayer.setVolume(20);
+    //游戏胜利的音效
+    winPlayer.setMedia(QUrl("qrc:/res/music/win.mp3"));
+    winPlayer.setVolume(20);
+    //游戏失败的音效
+    losePlayer.setMedia(QUrl("qrc:/res/music/lose.mp3"));
+    losePlayer.setVolume(20);
+
     //创建菜单栏的退出按钮
     QMenuBar * bar = menuBar();
     setMenuBar(bar);
@@ -56,6 +72,7 @@ PlayScene::PlayScene(int level)
         QTimer::singleShot(300,this,[=](){
             emit this->playSceneBack();//发出信号，让选择关卡界面监听
         });
+        bgm3player.stop();//停止播放背景音乐
     });
 
     //加载塔坑
@@ -127,6 +144,17 @@ void PlayScene::loadTowerPosition()//布置塔坑
         QPoint(440,130),
         QPoint(595,110)
     };
+    //第三关的塔坑
+    QPoint map3[]=
+    {
+        QPoint(50,185),
+        QPoint(185,300),
+        QPoint(185,130),
+        QPoint(330,165),
+        QPoint(610,170),
+        QPoint(610,260),
+        QPoint(495,280)
+    };
     int len;
     if(levelIndex==1)//布置第一关的塔坑
     {
@@ -150,6 +178,19 @@ void PlayScene::loadTowerPosition()//布置塔坑
             TowerPosition *tp=new TowerPosition(map2[i]);
             tp->setParent(this);//设置父类
             tp->move(map2[i]);
+//            QPixmap pix;//创建QPixmap对象
+//            pix.load(":/res/pot.jpg");//加载图片
+//            painter.drawPixmap(map2[i].x(),map2[i].y(),50,50,pix);//绘制塔坑
+            towerPositions_list.push_back(tp);
+        }
+    }
+    else if(levelIndex==3)//布置第三关的塔坑
+    {
+        len	= sizeof(map3) / sizeof(map3[0]);
+        for (int i = 0; i < len; ++i){
+            TowerPosition *tp=new TowerPosition(map3[i]);
+            tp->setParent(this);//设置父类
+            tp->move(map3[i]);
 //            QPixmap pix;//创建QPixmap对象
 //            pix.load(":/res/pot.jpg");//加载图片
 //            painter.drawPixmap(map2[i].x(),map2[i].y(),50,50,pix);//绘制塔坑
@@ -241,6 +282,59 @@ void PlayScene::loadWayPoint()//添加路线
         wayPoint11->setNextWayPoint(wayPoint10);
 
     }
+    else if(levelIndex==3){
+        WayPoint *wayPoint1 = new WayPoint(QPoint(463, 375));
+        wayPoints_list.push_back(wayPoint1);
+
+        WayPoint *wayPoint2 = new WayPoint(QPoint(463, 250));
+        wayPoints_list.push_back(wayPoint2);
+        wayPoint2->setNextWayPoint(wayPoint1);
+
+        WayPoint *wayPoint3 = new WayPoint(QPoint(580, 250));
+        wayPoints_list.push_back(wayPoint3);
+        wayPoint3->setNextWayPoint(wayPoint2);
+
+        WayPoint *wayPoint4 = new WayPoint(QPoint(580, 345));
+        wayPoints_list.push_back(wayPoint4);
+        wayPoint4->setNextWayPoint(wayPoint3);
+
+        WayPoint *wayPoint5 = new WayPoint(QPoint(695, 345));
+        wayPoints_list.push_back(wayPoint5);
+        wayPoint5->setNextWayPoint(wayPoint4);
+
+        WayPoint *wayPoint6 = new WayPoint(QPoint(695, 135));
+        wayPoints_list.push_back(wayPoint6);
+        wayPoint6->setNextWayPoint(wayPoint5);
+
+        WayPoint *wayPoint7 = new WayPoint(QPoint(285, 135));
+        wayPoints_list.push_back(wayPoint7);
+        wayPoint7->setNextWayPoint(wayPoint6);
+
+        WayPoint *wayPoint8 = new WayPoint(QPoint(285, 400));
+        wayPoints_list.push_back(wayPoint8);
+        wayPoint8->setNextWayPoint(wayPoint7);
+
+        WayPoint *wayPoint9 = new WayPoint(QPoint(85, 400));
+        wayPoints_list.push_back(wayPoint9);
+        wayPoint9->setNextWayPoint(wayPoint8);
+
+        WayPoint *wayPoint10 = new WayPoint(QPoint(85, 290));
+        wayPoints_list.push_back(wayPoint10);
+        wayPoint10->setNextWayPoint(wayPoint9);
+
+        WayPoint *wayPoint11 = new WayPoint(QPoint(140, 290));
+        wayPoints_list.push_back(wayPoint11);
+        wayPoint11->setNextWayPoint(wayPoint10);
+
+        WayPoint *wayPoint12 = new WayPoint(QPoint(140, 135));
+        wayPoints_list.push_back(wayPoint12);
+        wayPoint12->setNextWayPoint(wayPoint11);
+
+        WayPoint *wayPoint13 = new WayPoint(QPoint(0, 135));
+        wayPoints_list.push_back(wayPoint13);
+        wayPoint13->setNextWayPoint(wayPoint12);
+
+    }
 }
 void PlayScene::PaintTower()//画出防御塔
 {
@@ -253,11 +347,12 @@ void PlayScene::PaintTower()//画出防御塔
                 qDebug()<<"选择了Sans";
                 if(gold>=200){
                     gold-=200;
-                    (*p)->setTower();//设置为有塔
                     TowerParent *tower=new TowerParent((*p)->pos,":/res/sans.png",this);//创建一个塔
+                    (*p)->setTower(tower);//设置为有塔
                     tower_list.push_back(tower);
                     qDebug()<<"放置Sans";
                     (*p)->hide();
+                    setTowerPlayer.play();//播放放塔音效
                     update();
                 }
             });
@@ -265,11 +360,12 @@ void PlayScene::PaintTower()//画出防御塔
                 qDebug()<<"选择了Papyrus";
                 if(gold>=250){
                     gold-=250;
-                    (*p)->setTower();//设置为有塔
                     TowerFreeze *tower=new TowerFreeze((*p)->pos,":/res/pap.png",this);//创建一个塔
+                    (*p)->setTower(tower);//设置为有塔
                     tower_list.push_back(tower);
                     qDebug()<<"放置Papyrus";
                     (*p)->hide();
+                    setTowerPlayer.play();//播放放塔音效
                     update();
                 }
             });
@@ -277,11 +373,12 @@ void PlayScene::PaintTower()//画出防御塔
                 qDebug()<<"选择了Asgore";
                 if(gold>=300){
                     gold-=300;
-                    (*p)->setTower();//设置为有塔
                     TowerAll *tower=new TowerAll((*p)->pos,":/res/dad.png",this);//创建一个塔
+                    (*p)->setTower(tower);//设置为有塔
                     tower_list.push_back(tower);
                     qDebug()<<"放置Asgore";
                     (*p)->hide();
+                    setTowerPlayer.play();//播放放塔音效
                     update();
                 }
             });
@@ -309,7 +406,7 @@ bool PlayScene::loadWave()
             QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
                 //singleShot相当于定时器，好处在于不需使用timer，在设置时间到后自动触发SLOT中的函数
         }
-        else
+        else if(wave>=2&&wave<4)
         {
             //一样一个的插入
             if(i%2==0)//插入mtt1
@@ -320,11 +417,16 @@ bool PlayScene::loadWave()
             }
             else//插入mtt2
             {
-                Enemy *enemy = new Enemy(startWayPoint, this,80,2.0,150,":/res/mtt2.png");
+                Enemy *enemy = new Enemy(startWayPoint, this,80,2.2,100,":/res/mtt2.png");
                 enemy_list.push_back(enemy);
                 QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
             }
 
+        }
+        else{//只有mtt2
+            Enemy *enemy = new Enemy(startWayPoint, this,80,2.2,100,":/res/mtt2.png");
+            enemy_list.push_back(enemy);
+            QTimer::singleShot( i * enemyStartInterval, enemy, SLOT(doActivate()));
         }
     }
     return true;
@@ -407,7 +509,11 @@ void PlayScene::allEffect(All *all)
         if(ifInRange(enemy->getPos(),1,all->getPos(),all->getTargetRadius()))//若在攻击范围内
         {
             enemy->getDamage(all->getDamage());
-            enemy->setAlled();
+            if(enemy->ifAlive())//当敌人还活着
+            {
+                enemy->setAlled();
+            }
+
         }
 
     }
@@ -496,10 +602,41 @@ QList<Enemy *> PlayScene::enemyList() const
 {
     return enemy_list;
 }
+void PlayScene::mousePressEvent(QMouseEvent *event)//鼠标点击事件，用来升级和移除
+{
+    QPoint pressPos = event->pos();
+    auto p = towerPositions_list.begin();
+    while (p != towerPositions_list.end())
+    {
+        //鼠标左键，点击在塔坑附近，且此处有塔
+        //设置左键进行升级
+        if(event->button()==Qt::LeftButton&& (*p)->hasTower()&&(*p)->containPoint(pressPos))
+        {
+            if(gold>=200&&(*p)->getTower()->canLevelUp())
+            {
+                gold-=200;
+                (*p)->getTower()->levelUp();//进行升级
+                levelUpPlayer.play();//播放升级音效
+            }
+        }
+        //鼠标右键，点击在塔坑附近，且此处有塔
+        //右键拆除
+        if(event->button()==Qt::RightButton&& (*p)->hasTower()&&(*p)->containPoint(pressPos))
+        {
+            tower_list.removeOne((*p)->getTower());//移除这个塔
+            (*p)->show();//重新显示塔坑
+            (*p)->setNoTower();//将塔坑位置设置为无塔
+            setTowerPlayer.play();//播放拆塔音效
+        }
+        update();
+        p++;
+    }
+}
 void PlayScene::paintEvent(QPaintEvent *){
     //判断游戏是否结束
     if (_gameLose)
     {
+        losePlayer.play();//播放游戏失败音效
         QPixmap losegame;
         losegame.load(":/res/lose.jpg");
         QPainter painter;
@@ -509,12 +646,13 @@ void PlayScene::paintEvent(QPaintEvent *){
         foreach(TowerPosition * p,towerPositions_list){
             (*p).hide();
         }
-//        m_player.stop();
+        bgm3player.stop();//停止播放
         return;
     }
     //判断游戏是否胜利
     if (_gameWin)
     {
+        winPlayer.play();//播放游戏胜利音效
         QPixmap wingame;
         wingame.load(":/res/win.jpg");
         QPainter painter;
@@ -524,7 +662,7 @@ void PlayScene::paintEvent(QPaintEvent *){
         foreach(TowerPosition * p,towerPositions_list){
             (*p).hide();
         }
-//        m_player.stop();
+        bgm3player.stop();//停止播放
         return;
     }
 
